@@ -6,7 +6,7 @@
 /*   By: ptheo <ptheo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 15:41:56 by ptheo             #+#    #+#             */
-/*   Updated: 2024/08/22 18:23:16 by ptheo            ###   ########.fr       */
+/*   Updated: 2024/08/23 18:02:09 by ptheo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,14 @@
 
 int	pipex(int fd1, int fd2, char **cmd, char **envp)
 {
-	pid_t	p;
-	int		status;
 	int		end[2];
+	int		status;
 
 	pipe(end);
-	p = fork();
-	if (p < 0)
-		return (close(end[0]), close(end[1]), perror("Error fork"), -1);
-	if (p == 0)
-	{
-		dup2(fd1, STDIN_FILENO);
-		dup2(end[1], STDOUT_FILENO);
-		execute_cmd(cmd[2], envp);
-	}
-	else
-	{
-		waitpid(0, &status, 0);
-		dup2(end[0], STDIN_FILENO);
-		dup2(fd2, STDOUT_FILENO);
-		execute_cmd(cmd[3], envp);
-	}
+	cmd1_side(fd1, end, cmd, envp);
+	cmd2_side(fd2, end, cmd, envp);
+	waitpid(-1, &status, 0);
+	waitpid(-1, &status, 0);
 	return (0);
 }
 
@@ -63,7 +50,7 @@ int	execute_cmd(char *cmd, char **envp)
 	while (*allpath != NULL)
 	{
 		path_cmd = ft_strjoin(*allpath, argcmd[0]);
-		execve(path_cmd, argcmd + 1, envp);
+		execve(path_cmd, argcmd, envp);
 		free(path_cmd);
 		allpath++;
 	}

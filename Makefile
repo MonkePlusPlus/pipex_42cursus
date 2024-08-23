@@ -6,7 +6,7 @@
 #    By: ptheo <ptheo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/22 14:32:26 by ptheo             #+#    #+#              #
-#    Updated: 2024/08/22 18:02:55 by ptheo            ###   ########.fr        #
+#    Updated: 2024/08/23 17:47:33 by ptheo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,7 @@ SRC		= ./src/
 FILE	 = main.c
 FILE	+= pipex.c
 FILE	+= ft_split_add.c
+FILE	+= pipex_utils.c
 # END OF FILE
 
 SRC_FILE	= $(addprefix $(SRC), $(FILE))
