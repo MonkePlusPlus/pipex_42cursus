@@ -6,7 +6,7 @@
 /*   By: ptheo <ptheo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 15:41:56 by ptheo             #+#    #+#             */
-/*   Updated: 2024/08/23 18:02:09 by ptheo            ###   ########.fr       */
+/*   Updated: 2024/08/24 19:05:27 by ptheo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,14 @@ int	pipex(int fd1, int fd2, char **cmd, char **envp)
 	int		status;
 
 	pipe(end);
-	cmd1_side(fd1, end, cmd, envp);
-	cmd2_side(fd2, end, cmd, envp);
+	if (cmd1_side(fd1, end, cmd, envp) == -1)
+		return (close(end[0]), close(end[1]), -1);
+	if (cmd2_side(fd2, end, cmd, envp) == -1)
+		return (close(end[0]), close(end[1]), -1);
 	waitpid(-1, &status, 0);
 	waitpid(-1, &status, 0);
+	close(end[0]);
+	close(end[1]);
 	return (0);
 }
 
@@ -54,7 +58,7 @@ int	execute_cmd(char *cmd, char **envp)
 		free(path_cmd);
 		allpath++;
 	}
-	perror("Error cmd");
+	perror("Error command");
 	return (-1);
 }
 
