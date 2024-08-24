@@ -6,24 +6,37 @@
 /*   By: ptheo <ptheo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 15:41:56 by ptheo             #+#    #+#             */
-/*   Updated: 2024/08/24 21:22:38 by ptheo            ###   ########.fr       */
+/*   Updated: 2024/08/24 21:25:45 by ptheo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/pipex.h"
+#include "../includes/pipex_bonus.h"
 
 int	pipex(int fd1, int fd2, char **cmd, char **envp)
 {
 	int		end[2];
 	int		status;
+	int		i;
+	int		fd;
 
 	pipe(end);
-	if (cmd1_side(fd1, end, cmd, envp) == -1)
+	i = 2;
+	fd = fd1;
+	while (i < cmdlen(cmd) - 2)
+	{
+		if (cmd_side(fd, end, cmd[i], envp) == -1)
+			return (close(end[0]), close(end[1]), -1);
+		i++;
+		fd = end[0];
+	}
+	if (cmdlast_side(fd2, end, cmd[i], envp) == -1)
 		return (close(end[0]), close(end[1]), -1);
-	if (cmd2_side(fd2, end, cmd, envp) == -1)
-		return (close(end[0]), close(end[1]), -1);
-	waitpid(-1, &status, 0);
-	waitpid(-1, &status, 0);
+	i = 2;
+	while (i < cmdlen(cmd) - 1)
+	{
+		waitpid(-1, &status, 0);
+		i++;
+	}
 	close(end[0]);
 	close(end[1]);
 	return (0);
