@@ -6,7 +6,7 @@
 #    By: ptheo <ptheo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/22 14:32:26 by ptheo             #+#    #+#              #
-#    Updated: 2024/08/24 20:26:39 by ptheo            ###   ########.fr        #
+#    Updated: 2024/08/25 03:02:30 by ptheo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,10 +25,11 @@ SRC_FILE	= $(addprefix $(SRC), $(FILE))
 SRC_BONUS	= ./bonus/
 
 # FILE BONUS
-FILE_BONUS	= main.c
-FILE_BONUS	+= pipex.c
-FILE_BONUS	+= ft_split_add.c
-FILE_BONUS	+= pipex_utils.c
+FILE_BONUS	= main_bonus.c
+FILE_BONUS	+= pipex_bonus.c
+FILE_BONUS	+= ft_split_add_bonus.c
+FILE_BONUS	+= pipex_utils_bonus.c
+FILE_BONUS	+= here_doc_bonus.c
 # END FILE BONUS
 SRC_FILE_BONUS	= $(addprefix $(SRC_BONUS), $(FILE_BONUS))
 

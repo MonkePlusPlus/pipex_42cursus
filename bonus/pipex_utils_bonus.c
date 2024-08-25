@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_utils.c                                      :+:      :+:    :+:   */
+/*   pipex_utils_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ptheo <ptheo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 17:41:05 by ptheo             #+#    #+#             */
-/*   Updated: 2024/08/24 21:15:38 by ptheo            ###   ########.fr       */
+/*   Updated: 2024/08/25 03:01:50 by ptheo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,41 +22,45 @@ int	cmdlen(char **cmd)
 	return (i);
 }
 
-int	cmd_side(int fd, int end[2], char *cmd, char **envp)
+int	cmd_side(t_data *data, int i)
 {
 	pid_t	p;
 
+	printf("fd : %d\n", data->fd);
+	pipe(data->end);
 	p = fork();
 	if (p < 0)
-		return (close(end[0]), close(end[1]), perror("Error fork"), -1);
+		return (perror("Error fork"), -1);
 	if (p == 0)
 	{
-		dup2(fd, STDIN_FILENO);
-		dup2(end[1], STDOUT_FILENO);
-		if (execute_cmd(cmd, envp) == -1)
+		dup2(data->fd, STDIN_FILENO);
+		dup2(data->end[1], STDOUT_FILENO);
+		if (execute_cmd(data, i) == -1)
 			return (-1);
 	}
 	else
 	{
-		dup2(STDOUT_FILENO, end[1]);
-		dup2(STDIN_FILENO, end[0]);
+		dup2(STDIN_FILENO, data->fd);
+		dup2(STDOUT_FILENO, data->end[1]);
+		data->fd = data->end[0];
 	}
 	return (0);
 }
 
-int	cmdlast_side(int fd2, int end[2], char *cmd, char **envp)
+int	cmdlast_side(t_data *data, int i)
 {
 	pid_t	p;
 
+	printf("fd : %d\n", data->fd);
 	p = fork();
 	if (p < 0)
-		return (close(end[0]), close(end[1]), perror("Error fork"), -1);
+		return (perror("Error fork"), -1);
 	if (p == 0)
 	{
-		dup2(end[0], STDIN_FILENO);
-		dup2(fd2, STDOUT_FILENO);
-		if (execute_cmd(cmd, envp) == -1)
+		dup2(data->end[0], STDIN_FILENO);
+		dup2(data->fd2, STDOUT_FILENO);
+		if (execute_cmd(data, i) == -1)
 			return (-1);
 	}
 	return (0);
-}	
+}

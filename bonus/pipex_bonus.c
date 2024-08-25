@@ -1,44 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
+/*   pipex_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ptheo <ptheo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 15:41:56 by ptheo             #+#    #+#             */
-/*   Updated: 2024/08/24 21:25:45 by ptheo            ###   ########.fr       */
+/*   Updated: 2024/08/25 03:01:51 by ptheo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex_bonus.h"
 
-int	pipex(int fd1, int fd2, char **cmd, char **envp)
+int	pipex(t_data *data)
 {
-	int		end[2];
-	int		status;
 	int		i;
-	int		fd;
+	int		len;
 
-	pipe(end);
 	i = 2;
-	fd = fd1;
-	while (i < cmdlen(cmd) - 2)
+	len = cmdlen(data->cmd);
+	data->fd = data->fd1;
+	while (i < len - 2)
 	{
-		if (cmd_side(fd, end, cmd[i], envp) == -1)
-			return (close(end[0]), close(end[1]), -1);
-		i++;
-		fd = end[0];
-	}
-	if (cmdlast_side(fd2, end, cmd[i], envp) == -1)
-		return (close(end[0]), close(end[1]), -1);
-	i = 2;
-	while (i < cmdlen(cmd) - 1)
-	{
-		waitpid(-1, &status, 0);
+		if (cmd_side(data, i) == -1)
+			return (-1);
 		i++;
 	}
-	close(end[0]);
-	close(end[1]);
+	if (cmdlast_side(data, i) == -1)
+		return (-1);
+	i = 2;
+	while (i < len - 1)
+	{
+		waitpid(-1, NULL, 0);
+		i++;
+	}
 	return (0);
 }
 
@@ -54,20 +49,20 @@ void	print_line(char **str)
 	}
 }
 
-int	execute_cmd(char *cmd, char **envp)
+int	execute_cmd(t_data *data, int i)
 {
 	char	**argcmd;
 	char	**allpath;
 	char	*path;
 	char	*path_cmd;
 
-	path = ft_strfind(envp, "PATH=");
-	argcmd = ft_split(cmd, ' ');
+	path = ft_strfind(data->envp, "PATH=");
+	argcmd = ft_split(data->cmd[i], ' ');
 	allpath = ft_split_add(path, ':');
 	while (*allpath != NULL)
 	{
 		path_cmd = ft_strjoin(*allpath, argcmd[0]);
-		execve(path_cmd, argcmd, envp);
+		execve(path_cmd, argcmd, data->envp);
 		free(path_cmd);
 		allpath++;
 	}
