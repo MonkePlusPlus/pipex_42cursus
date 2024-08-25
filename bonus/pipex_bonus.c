@@ -6,20 +6,27 @@
 /*   By: ptheo <ptheo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 15:41:56 by ptheo             #+#    #+#             */
-/*   Updated: 2024/08/25 17:36:56 by ptheo            ###   ########.fr       */
+/*   Updated: 2024/08/26 01:40:04 by ptheo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex_bonus.h"
 
-int	pipex(t_data *data)
+void	read_file(int fd)
+{
+	char	buf[1];
+
+	while (read(fd, buf, 1) != 0)
+		ft_putchar_fd(buf[0], 1);
+}
+
+int	pipex(t_data *data, int start)
 {
 	int		i;
 	int		len;
 
-	i = 2;
-	len = cmdlen(data->cmd);
-	data->fd = data->fd1;
+	i = start;
+	len = data->len;
 	while (i < len - 2)
 	{
 		if (cmd_side(data, i) == -1)
@@ -28,9 +35,10 @@ int	pipex(t_data *data)
 	}
 	if (cmdlast_side(data, i) == -1)
 		return (-1);
-	i = 2;
+	i = start;
 	while (i < len - 1)
 	{
+		printf("wait len : %d i : %d\n", len, i);
 		waitpid(-1, NULL, 0);
 		i++;
 	}
