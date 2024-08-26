@@ -6,7 +6,7 @@
 /*   By: ptheo <ptheo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 17:41:05 by ptheo             #+#    #+#             */
-/*   Updated: 2024/08/26 01:40:04 by ptheo            ###   ########.fr       */
+/*   Updated: 2024/08/26 16:52:17 by ptheo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ int	cmd_side(t_data *data, int i)
 {
 	pid_t	p;
 
-	printf("%d -> fd[0] : %d fd[1] : %d\n", i, data->fd[0], data->fd[1]);
 	pipe(data->end);
 	p = fork();
 	if (p < 0)
@@ -36,19 +35,18 @@ int	cmd_side(t_data *data, int i)
 		dup2(data->fd[0], STDIN_FILENO);
 		dup2(data->end[1], STDOUT_FILENO);
 		if (execute_cmd(data, i) == -1)
-			return (-1);
+			return (close(data->fd[0]), close(data->fd[1]), -1);
 	}
 	else
 	{
 		dup2(STDIN_FILENO, data->fd[0]);
 		dup2(STDOUT_FILENO, data->end[1]);
 		close(data->fd[0]);
-		if (i != 2)
+		if (i > 3)
 			close(data->fd[1]);
 		data->fd[0] = data->end[0];
 		data->fd[1] = data->end[1];
 	}
-	printf("end process\n");
 	return (0);
 }
 
@@ -56,7 +54,6 @@ int	cmdlast_side(t_data *data, int i)
 {
 	pid_t	p;
 
-	printf("%d -> fd[0] : %d fd[1] : %d\n", i, data->fd[0], data->fd[1]);
 	p = fork();
 	if (p < 0)
 		return (perror("Error fork"), -1);
@@ -65,13 +62,12 @@ int	cmdlast_side(t_data *data, int i)
 		dup2(data->fd[0], STDIN_FILENO);
 		dup2(data->fd2, STDOUT_FILENO);
 		if (execute_cmd(data, i) == -1)
-			return (-1);
+			return (close(data->fd[0]), close(data->fd[1]), -1);
 	}
 	else
 	{
 		close(data->fd[0]);
 		close(data->fd[1]);
 	}
-	printf("end process\n");
 	return (0);
 }

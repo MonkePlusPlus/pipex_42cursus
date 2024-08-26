@@ -6,12 +6,12 @@
 /*   By: ptheo <ptheo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 14:31:53 by ptheo             #+#    #+#             */
-/*   Updated: 2024/08/26 01:40:05 by ptheo            ###   ########.fr       */
+/*   Updated: 2024/08/26 16:38:09 by ptheo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#ifndef PIPEX_BONUS_H
+# define PIPEX_BONUS_H
 
 # include "../libft/libft.h"
 # include <fcntl.h>
@@ -25,15 +25,15 @@
 
 # define HERE_DOC "here_doc"
 
-typedef struct	s_data
+typedef struct s_data
 {
-    int		fd1;
-    int		fd2;
-    int		len;
-    char	**cmd;
-    char	**envp;
-    int		end[2];
-    int		fd[2];
+	int		fd1;
+	int		fd2;
+	int		len;
+	char	**cmd;
+	char	**envp;
+	int		end[2];
+	int		fd[2];
 }				t_data;
 
 /* PIPEX */
@@ -43,10 +43,10 @@ char	*ft_strfind(char **str, char *to_find);
 char	**ft_split_add(char const *s, char c);
 int		cmd_side(t_data *data, int i);
 int		cmdlast_side(t_data *data, int i);
-int 	cmdlen(char **cmd);
+int		cmdlen(char **cmd);
 
 /* HERE_DOC */
-int	check_heredoc(char	*str, char *str2, int n);
-int	pipex_heredoc(t_data *data);
+int		check_heredoc(char	*str, char *str2, int n);
+int		pipex_heredoc(t_data *data);
 
 #endif

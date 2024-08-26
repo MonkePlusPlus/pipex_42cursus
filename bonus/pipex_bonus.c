@@ -6,19 +6,11 @@
 /*   By: ptheo <ptheo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 15:41:56 by ptheo             #+#    #+#             */
-/*   Updated: 2024/08/26 01:40:04 by ptheo            ###   ########.fr       */
+/*   Updated: 2024/08/26 16:41:05 by ptheo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex_bonus.h"
-
-void	read_file(int fd)
-{
-	char	buf[1];
-
-	while (read(fd, buf, 1) != 0)
-		ft_putchar_fd(buf[0], 1);
-}
 
 int	pipex(t_data *data, int start)
 {
@@ -38,23 +30,10 @@ int	pipex(t_data *data, int start)
 	i = start;
 	while (i < len - 1)
 	{
-		printf("wait len : %d i : %d\n", len, i);
 		waitpid(-1, NULL, 0);
 		i++;
 	}
 	return (0);
-}
-
-void	print_line(char **str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		printf("%s\n", str[i]);
-		i++;
-	}
 }
 
 int	execute_cmd(t_data *data, int i)
@@ -70,6 +49,8 @@ int	execute_cmd(t_data *data, int i)
 	while (*allpath != NULL)
 	{
 		path_cmd = ft_strjoin(*allpath, argcmd[0]);
+		if (path_cmd == NULL)
+			return (perror("Error malloc"), -1);
 		execve(path_cmd, argcmd, data->envp);
 		free(path_cmd);
 		allpath++;
