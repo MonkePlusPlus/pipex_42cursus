@@ -6,7 +6,7 @@
 /*   By: ptheo <ptheo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 15:41:56 by ptheo             #+#    #+#             */
-/*   Updated: 2024/08/26 16:41:05 by ptheo            ###   ########.fr       */
+/*   Updated: 2024/08/28 17:26:42 by ptheo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ int	pipex(t_data *data, int start)
 	int		i;
 	int		len;
 
+	if (create_path(data) == -1)
+		return (-1);
 	i = start;
 	len = data->len;
 	while (i < len - 2)
@@ -36,27 +38,31 @@ int	pipex(t_data *data, int start)
 	return (0);
 }
 
-int	execute_cmd(t_data *data, int i)
+int	execute_cmd(t_data *data, int index)
 {
-	char	**argcmd;
-	char	**allpath;
-	char	*path;
-	char	*path_cmd;
+	int		i;
 
-	path = ft_strfind(data->envp, "PATH=");
-	argcmd = ft_split(data->cmd[i], ' ');
-	allpath = ft_split_add(path, ':');
-	while (*allpath != NULL)
+	i = 0;
+	if (data->argcmd != NULL)
+		ft_freesplit(data->argcmd);
+	if (data->path_cmd != NULL)
+		free(data->path_cmd);
+	data->argcmd = ft_split(data->cmd[index], ' ');
+	if (data->argcmd == NULL)
+		return (-1);
+	while (data->allpath[i] != NULL)
 	{
-		path_cmd = ft_strjoin(*allpath, argcmd[0]);
-		if (path_cmd == NULL)
-			return (perror("Error malloc"), -1);
-		execve(path_cmd, argcmd, data->envp);
-		free(path_cmd);
-		allpath++;
+		data->path_cmd = ft_strjoin(data->allpath[i], data->argcmd[0]);
+		if (data->path_cmd == NULL)
+			return (perror("Error malloc"), ft_freesplit(data->argcmd), -1);
+		execve(data->path_cmd, data->argcmd, data->envp);
+		free(data->path_cmd);
+		i++;
 	}
-	perror("Error command");
-	return (-1);
+	ft_putstr_fd("Error: command not found: ", 2);
+	ft_putstr_fd(data->argcmd[0], 2);
+	ft_putstr_fd("\n", 2);
+	return (ft_freesplit(data->argcmd), data->argcmd = NULL, -1);
 }
 
 char	*ft_strfind(char **str, char *to_find)
@@ -75,4 +81,17 @@ char	*ft_strfind(char **str, char *to_find)
 		i++;
 	}
 	return (NULL);
+}
+
+int	create_path(t_data *data)
+{
+	char	*path;
+
+	path = ft_strfind(data->envp, "PATH=");
+	data->allpath = ft_split_add(path, ':');
+	if (data->allpath == NULL)
+		return (perror("Error malloc"), -1);
+	data->path_cmd = NULL;
+	data->argcmd = NULL;
+	return (0);
 }

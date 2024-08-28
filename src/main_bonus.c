@@ -6,11 +6,25 @@
 /*   By: ptheo <ptheo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 14:41:10 by ptheo             #+#    #+#             */
-/*   Updated: 2024/08/26 16:43:25 by ptheo            ###   ########.fr       */
+/*   Updated: 2024/08/28 17:23:04 by ptheo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex_bonus.h"
+
+void	ft_freesplit(char **s)
+{
+	int	i;
+
+	i = 0;
+	while (s && s[i])
+	{
+		free(s[i]);
+		i++;
+	}
+	free(s);
+	s = NULL;
+}
 
 int	main(int ac, char **av, char **envp)
 {
@@ -21,6 +35,7 @@ int	main(int ac, char **av, char **envp)
 		data.len = ac;
 		data.cmd = av;
 		data.envp = envp;
+		data.allpath = NULL;
 		if (ac > 5 && check_heredoc(av[1], HERE_DOC, 0))
 			pipex_heredoc(&data);
 		else
@@ -32,6 +47,7 @@ int	main(int ac, char **av, char **envp)
 				return (perror("Error opening fds"), 1);
 			pipex(&data, 2);
 		}
+		ft_freesplit(data.allpath);
 		close(data.fd2);
 	}
 	else

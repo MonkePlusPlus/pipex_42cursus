@@ -6,7 +6,7 @@
 /*   By: ptheo <ptheo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 14:31:53 by ptheo             #+#    #+#             */
-/*   Updated: 2024/08/26 16:38:09 by ptheo            ###   ########.fr       */
+/*   Updated: 2024/08/28 16:00:15 by ptheo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,9 @@ typedef struct s_data
 	char	**envp;
 	int		end[2];
 	int		fd[2];
+	char	**argcmd;
+	char	**allpath;
+	char	*path_cmd;
 }				t_data;
 
 /* PIPEX */
@@ -44,6 +47,8 @@ char	**ft_split_add(char const *s, char c);
 int		cmd_side(t_data *data, int i);
 int		cmdlast_side(t_data *data, int i);
 int		cmdlen(char **cmd);
+void	ft_freesplit(char **s);
+int		create_path(t_data *data);
 
 /* HERE_DOC */
 int		check_heredoc(char	*str, char *str2, int n);

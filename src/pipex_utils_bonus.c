@@ -6,7 +6,7 @@
 /*   By: ptheo <ptheo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 17:41:05 by ptheo             #+#    #+#             */
-/*   Updated: 2024/08/26 16:52:17 by ptheo            ###   ########.fr       */
+/*   Updated: 2024/08/28 17:25:11 by ptheo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ int	cmd_side(t_data *data, int i)
 	pipe(data->end);
 	p = fork();
 	if (p < 0)
-		return (perror("Error fork"), -1);
+		return (perror("Error fork"), close(data->fd[0]),
+			close(data->fd[1]), -1);
 	if (p == 0)
 	{
 		dup2(data->fd[0], STDIN_FILENO);
@@ -66,6 +67,10 @@ int	cmdlast_side(t_data *data, int i)
 	}
 	else
 	{
+		if (data->argcmd != NULL)
+			ft_freesplit(data->argcmd);
+		if (data->path_cmd != NULL)
+			free(data->path_cmd);
 		close(data->fd[0]);
 		close(data->fd[1]);
 	}
