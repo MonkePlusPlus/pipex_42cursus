@@ -6,7 +6,7 @@
 #    By: ptheo <ptheo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/22 14:32:26 by ptheo             #+#    #+#              #
-#    Updated: 2024/08/28 15:36:49 by ptheo            ###   ########.fr        #
+#    Updated: 2024/09/05 19:56:50 by ptheo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,6 +37,8 @@ RM		:= rm -f
 MAKE	:= make
 
 all : $(NAME) $(PATH_LIBFT)
+
+bonus : $(NAME) $(PATH_LIBFT)
 
 $(NAME) : $(OBJ) $(LIBFT)
 		@echo "compilation of pipex file :"

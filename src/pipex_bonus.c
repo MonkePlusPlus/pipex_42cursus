@@ -6,7 +6,7 @@
 /*   By: ptheo <ptheo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 15:41:56 by ptheo             #+#    #+#             */
-/*   Updated: 2024/08/28 17:26:42 by ptheo            ###   ########.fr       */
+/*   Updated: 2024/09/05 20:16:09 by ptheo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	execute_cmd(t_data *data, int index)
 {
 	int		i;
 
-	i = 0;
+	i = -1;
 	if (data->argcmd != NULL)
 		ft_freesplit(data->argcmd);
 	if (data->path_cmd != NULL)
@@ -50,14 +50,16 @@ int	execute_cmd(t_data *data, int index)
 	data->argcmd = ft_split(data->cmd[index], ' ');
 	if (data->argcmd == NULL)
 		return (-1);
-	while (data->allpath[i] != NULL)
+	while (data->allpath[++i] != NULL)
 	{
-		data->path_cmd = ft_strjoin(data->allpath[i], data->argcmd[0]);
+		if (access(data->cmd[index], X_OK) == 0)
+			data->path_cmd = data->cmd[index];
+		else
+			data->path_cmd = ft_strjoin(data->allpath[i], data->argcmd[0]);
 		if (data->path_cmd == NULL)
 			return (perror("Error malloc"), ft_freesplit(data->argcmd), -1);
 		execve(data->path_cmd, data->argcmd, data->envp);
 		free(data->path_cmd);
-		i++;
 	}
 	ft_putstr_fd("Error: command not found: ", 2);
 	ft_putstr_fd(data->argcmd[0], 2);
