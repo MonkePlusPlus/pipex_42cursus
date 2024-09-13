@@ -6,7 +6,7 @@
 /*   By: ptheo <ptheo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 14:31:53 by ptheo             #+#    #+#             */
-/*   Updated: 2024/09/13 00:39:36 by ptheo            ###   ########.fr       */
+/*   Updated: 2024/09/13 02:44:05 by ptheo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ int		cmdlast_side(t_data *data, int i);
 int		cmdlen(char **cmd);
 void	ft_freesplit(char **s);
 int		create_path(t_data *data);
+void	close_fds(t_data *data);
 
 /* HERE_DOC */
 int		check_heredoc(char	*str, char *str2, int n);

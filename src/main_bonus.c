@@ -6,7 +6,7 @@
 /*   By: ptheo <ptheo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 14:41:10 by ptheo             #+#    #+#             */
-/*   Updated: 2024/09/13 01:01:00 by ptheo            ###   ########.fr       */
+/*   Updated: 2024/09/13 02:55:35 by ptheo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,15 @@ int	init_data(t_data *data, int ac, char **av, char **envp)
 	return (1);
 }
 
+void	ft_freedata(t_data *data)
+{
+	if (data->allpath != NULL)
+		ft_freesplit(data->allpath);
+	if (data->tabpid != NULL)
+		free(data->tabpid);
+	close(data->fd2);
+}
+
 int	main(int ac, char **av, char **envp)
 {
 	t_data	data;
@@ -59,9 +68,7 @@ int	main(int ac, char **av, char **envp)
 					close(data.fd1), close(data.fd2), 1);
 			pipex(&data);
 		}
-		ft_freesplit(data.allpath);
-		free(data.tabpid);
-		close(data.fd2);
+		ft_freedata(&data);
 	}
 	else
 		return (ft_putstr_fd("Error number argument\n", 2), 1);

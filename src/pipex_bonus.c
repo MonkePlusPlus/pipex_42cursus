@@ -6,7 +6,7 @@
 /*   By: ptheo <ptheo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 15:41:56 by ptheo             #+#    #+#             */
-/*   Updated: 2024/09/13 00:44:25 by ptheo            ###   ########.fr       */
+/*   Updated: 2024/09/13 02:39:20 by ptheo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	pipex(t_data *data)
 	if (cmdlast_side(data, i) == -1)
 		return (-1);
 	i = 0;
-	while (i < len - data->heredoc)
+	while (i < len - (2 + data->heredoc))
 	{
 		waitpid(data->tabpid[i], NULL, 0);
 		i++;
