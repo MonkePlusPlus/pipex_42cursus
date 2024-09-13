@@ -6,7 +6,7 @@
 /*   By: ptheo <ptheo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/25 03:00:15 by ptheo             #+#    #+#             */
-/*   Updated: 2024/08/28 15:32:40 by ptheo            ###   ########.fr       */
+/*   Updated: 2024/09/13 00:39:38 by ptheo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,11 @@ int	pipex_heredoc(t_data *data)
 	data->fd2 = open(data->cmd[data->len - 1], O_CREAT | O_RDWR | O_TRUNC,
 			0644);
 	if (data->fd2 < 0)
-		return (perror("Error opening fds"), 1);
+		return (perror("Error opening fds"), -1);
+	data->tabpid = (pid_t *)malloc(sizeof(pid_t) * data->len - 2);
+	if (data->tabpid == NULL)
+		return (ft_putstr_fd("Error pid tab\n", 2), close(data->fd2), 1);
+	data->heredoc = 2;
 	pipe(data->fd);
 	ft_printf("pipe heredoc>");
 	line = get_next_line(0);
@@ -43,7 +47,7 @@ int	pipex_heredoc(t_data *data)
 		{
 			free(line);
 			close(data->fd[1]);
-			return (pipex(data, 3));
+			return (pipex(data));
 		}
 		write(data->fd[1], line, ft_strlen(line));
 		free(line);

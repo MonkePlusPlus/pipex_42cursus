@@ -6,20 +6,20 @@
 /*   By: ptheo <ptheo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 15:41:56 by ptheo             #+#    #+#             */
-/*   Updated: 2024/09/09 19:50:18 by ptheo            ###   ########.fr       */
+/*   Updated: 2024/09/13 00:44:25 by ptheo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex_bonus.h"
 
-int	pipex(t_data *data, int start)
+int	pipex(t_data *data)
 {
 	int		i;
 	int		len;
 
 	if (create_path(data) == -1)
 		return (-1);
-	i = start;
+	i = data->heredoc + 1;
 	len = data->len;
 	while (i < len - 2)
 	{
@@ -29,10 +29,10 @@ int	pipex(t_data *data, int start)
 	}
 	if (cmdlast_side(data, i) == -1)
 		return (-1);
-	i = start;
-	while (i < len - 1)
+	i = 0;
+	while (i < len - data->heredoc)
 	{
-		waitpid(-1, NULL, 0);
+		waitpid(data->tabpid[i], NULL, 0);
 		i++;
 	}
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: ptheo <ptheo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 17:41:05 by ptheo             #+#    #+#             */
-/*   Updated: 2024/08/28 17:25:11 by ptheo            ###   ########.fr       */
+/*   Updated: 2024/09/13 01:04:57 by ptheo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,12 @@ int	cmdlen(char **cmd)
 
 int	cmd_side(t_data *data, int i)
 {
-	pid_t	p;
-
 	pipe(data->end);
-	p = fork();
-	if (p < 0)
+	data->tabpid[data->count] = fork();
+	if (data->tabpid[data->count] < 0)
 		return (perror("Error fork"), close(data->fd[0]),
 			close(data->fd[1]), -1);
-	if (p == 0)
+	if (data->tabpid[data->count] == 0)
 	{
 		dup2(data->fd[0], STDIN_FILENO);
 		dup2(data->end[1], STDOUT_FILENO);
@@ -48,17 +46,16 @@ int	cmd_side(t_data *data, int i)
 		data->fd[0] = data->end[0];
 		data->fd[1] = data->end[1];
 	}
+	data->count++;
 	return (0);
 }
 
 int	cmdlast_side(t_data *data, int i)
 {
-	pid_t	p;
-
-	p = fork();
-	if (p < 0)
+	data->tabpid[data->count] = fork();
+	if (data->tabpid[data->count] < 0)
 		return (perror("Error fork"), -1);
-	if (p == 0)
+	if (data->tabpid[data->count] == 0)
 	{
 		dup2(data->fd[0], STDIN_FILENO);
 		dup2(data->fd2, STDOUT_FILENO);

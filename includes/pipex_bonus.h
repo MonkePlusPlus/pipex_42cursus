@@ -6,7 +6,7 @@
 /*   By: ptheo <ptheo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 14:31:53 by ptheo             #+#    #+#             */
-/*   Updated: 2024/09/05 19:41:06 by ptheo            ###   ########.fr       */
+/*   Updated: 2024/09/13 00:39:36 by ptheo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,13 @@ typedef struct s_data
 	char	**argcmd;
 	char	**allpath;
 	char	*path_cmd;
+	pid_t	*tabpid;
+	int		count;
+	int		heredoc;
 }				t_data;
 
 /* PIPEX */
-int		pipex(t_data *data, int start);
+int		pipex(t_data *data);
 int		execute_cmd(t_data *data, int i);
 char	*ft_strfind(char **str, char *to_find);
 char	**ft_split_add(char const *s, char c);
